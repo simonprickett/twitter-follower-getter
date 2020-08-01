@@ -505,13 +505,12 @@
   }
   
 })(jQuery);
-
       </script>
       <script language="javascript">
           $(document).ready(function() {
 
               FlapDigit = function($ele) {
-                  this.digits = ['&nbsp;', 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, '.', ',', ':', '$'];
+                  this.digits = ['?', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
                   this.pos = 0;
                   this.target = this.digits[0];
                   this.interval = 150;
@@ -590,11 +589,51 @@
                   }
               };
 
-              $('.flapper .digit').each(function() {
-                  var flap = new FlapDigit($(this));
-                  var rand = Math.floor(Math.random() * 9) + 1;
-                  flap.cycleTo(rand);
-              });
+              const flappers = $('.flapper .digit');
+              const numFlappers = flappers.length;
+
+              const urlParams = new URLSearchParams(window.location.search);
+              const handle = urlParams.get('handle');
+
+              const myHeaders = new Headers();
+              myHeaders.append("x-api-key", "fsdfSDFWERWwsdfdsfdsf9988");
+
+              const requestOptions = {
+                method: 'GET',
+                headers: myHeaders,
+                redirect: 'follow'
+              };
+
+              fetch(`https://us-central1-crudworks-org.cloudfunctions.net/getFollowers?handle=${handle}`, requestOptions)
+                .then(response => response.json())
+                .then(result => {
+                  let followerCount = `${result.followers}`;
+
+                  if (followerCount === '-1' || followerCount.length > numFlappers) {
+                    $('.flapper .digit').each(function(index) {
+                      const flap = new FlapDigit($(this));
+                      flap.cycleTo(0);
+                    }); 
+
+                    return;             
+                  }
+
+                  while (followerCount.length < numFlappers) {
+                    followerCount = `0${followerCount}`;
+                  }
+
+                  $('.flapper .digit').each(function(index) {
+                    const flap = new FlapDigit($(this));
+                    flap.cycleTo(27 + parseInt(followerCount[index], 10));
+                  });               
+                })
+                .catch(error => {
+                  console.log('error', error);
+                  $('.flapper .digit').each(function(index) {
+                    const flap = new FlapDigit($(this));
+                    flap.cycleTo(0);
+                  }); 
+                });
           });
       </script>
       <style type="text/css">
