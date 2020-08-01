@@ -11,16 +11,16 @@ Google Cloud Function that returns the number of followers a given handle has, o
 Example code to call this, using JavaScript `fetch` API:
 
 ```
-var myHeaders = new Headers();
-myHeaders.append("x-api-key", "<api key>");
+const myHeaders = new Headers();
+myHeaders.append('x-api-key', '<api key>');
 
-var requestOptions = {
+const requestOptions = {
   method: 'GET',
   headers: myHeaders,
   redirect: 'follow'
 };
 
-fetch("https://<cloud function url>/getFollowers?handle=<twitter handle>", requestOptions)
+fetch('https://<cloud function url>/getFollowers?handle=<twitter handle>', requestOptions)
   .then(response => response.text())
   .then(result => console.log(result))
   .catch(error => console.log('error', error));
