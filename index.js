@@ -37,15 +37,3 @@ exports.getFollowers = async (req, res) => {
     return res.status(200).json({ followers: numFollowers });
   });
 };
-
-// Test harness.
-const runApplication = async () => {
-  const numFollowers = await getFollowerCount('suzeshardlow');
-  console.log(numFollowers);
-};
-
-try {
-  runApplication();
-} catch (e) {
-  console.error(e);
-}
