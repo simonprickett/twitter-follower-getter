@@ -25,10 +25,16 @@ const getFollowerCount = async twitterHandle => {
 
 exports.getFollowers = async (req, res) => {
   cors(req, res, async () => {
+    const apiKey = req.headers['x-api-key'];
+
+    if (! apiKey || apiKey !== process.env.API_KEY) {
+      return res.status(403).send('Not authorized.');
+    }
+
     const twitterHandle = req.query.handle;
 
     if (! twitterHandle || twitterHandle.length === 0) {
-      return res.status(400).send('Bad Request.');
+      return res.status(400).send('Bad request.');
     }
 
     const numFollowers = await getFollowerCount(twitterHandle);
