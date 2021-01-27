@@ -35,3 +35,4 @@ Where:
 When deploying to Google Cloud Functions, add the following environment variable:
 
 * `API_KEY` - set to whatever value you want to use, then provide that value in the `x-api-key` header when calling the function.
+* `TWITTER_BEARER_TOKEN` - set to a [Twitter API bearer token](https://developer.twitter.com/en/docs/authentication/oauth-2-0) for the Twitter API v2.

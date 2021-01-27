@@ -1,22 +1,15 @@
-const cheerio = require('cheerio');
 const cors = require('cors')();
 const fetch = require('node-fetch');
 
 const getFollowerCount = async twitterHandle => {
   try {
-    const response = await fetch(`https://mobile.twitter.com/${twitterHandle}`);
-    const pageText = await response.text();
-
-    const $ = cheerio.load(pageText);
-
-    // Need to get case sensitive screen name so we can find the 
-    // followers link.
-    const actualScreenName = $('.screen-name').text();
-    const followersLink = $(`a[href='/${actualScreenName}/followers']`);
-    const followersElem = followersLink.children('.statnum');
-    const followersStr = followersElem[0].firstChild.data;
-
-    return parseInt(followersStr.split(',').join(''), 10);
+    const response = await fetch(`https://api.twitter.com/2/users/by?usernames=${twitterHandle}&user.fields=public_metrics`, {
+        headers: {
+            'Authorization': `Bearer ${process.env.TWITTER_BEARER_TOKEN}`
+        }
+    });
+    const userData = await response.json();
+    return userData.data[0].public_metrics.followers_count;
   } catch (e) {
     console.error(e);
     return -1;
